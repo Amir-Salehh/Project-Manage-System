@@ -1,0 +1,83 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
+}
+.navbar {
+    background-color: #333;
+}
+.navbar-brand {
+    color: #ffffff;
+    font-weight: bold;
+}
+.container {
+    margin-top: 70px;
+}
+.form-label {
+    font-weight: bold;
+    color: #444;
+}
+.form-control, .select2-container {
+    border-radius: 12px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    padding: 15px;
+}
+.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+.btn-custom {
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-weight: bold;
+    border: none;
+    transition: all 0.3s ease;
+}
+.btn-custom:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+.btn-back {
+    background-color: #f5f5f5;
+    color: #007bff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+    border: 1px solid #007bff;
+    transition: all 0.3s ease;
+}
+.btn-back:hover {
+    background-color: #e2e2e2;
+    transform: translateY(-2px);
+}
+.form-section {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+}
+.section-title {
+    color: #007bff;
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+.footer {
+    margin-top: 40px;
+    padding: 30px;
+    background-color: #333;
+    color: white;
+    text-align: center;
+}
+.footer a {
+    color: white;
+    text-decoration: none;
+    margin-left: 10px;
+}
+.footer a:hover {
+    text-decoration: underline;
+}
