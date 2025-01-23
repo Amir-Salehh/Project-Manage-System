@@ -32,10 +32,10 @@ class dashboardController extends Controller
             'projectStatus' => 'required',
         ]);
         $deadline_jalali = ($request->input('projectDeadline'));
-        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
-        if ($deadline_miladi < Carbon::now()) {
+        if (!$deadline_jalali > Jalalian::now()) {
             return redirect()->back()->with('timePass', 'تاریخ انتخابی نمیتواند قدیمی باشد.');
         }
+        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
 
         $status = $request->input('projectStatus');
         $name = $request->input('projectName');
@@ -66,10 +66,10 @@ class dashboardController extends Controller
         ]);
 
         $deadline_jalali = ($request->input('projectDeadline'));
-        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
-        if ($deadline_miladi < Carbon::now()) {
+        if (!$deadline_jalali > Jalalian::now()) {
             return redirect()->back()->with('timePass', 'تاریخ انتخابی نمیتواند قدیمی باشد.');
         }
+        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
 
         $projects = $request->all();
         $project = Project::findOrFail($request->input('id'));

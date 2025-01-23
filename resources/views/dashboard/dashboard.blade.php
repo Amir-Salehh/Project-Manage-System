@@ -60,6 +60,7 @@
         </div>
     </div>
 
+    @if(!$projects->isEmpty())
     <div class="d-flex justify-content-center mt-4">
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-lg">
@@ -74,7 +75,7 @@
                 @endif
 
                 @foreach($projects->getUrlRange(1, $projects->lastPage()) as $page => $url)
-                    <li class="page-item">
+                    <li class="page-item" {{ $page == $projects->currentPage() ? 'active' : '' }}>
                         <a class="page-link" href="{{ $url }}">{{ $page }}</a>
                     </li>
                 @endforeach
@@ -91,5 +92,6 @@
             </ul>
         </nav>
     </div>
+    @endif
 
 @endsection

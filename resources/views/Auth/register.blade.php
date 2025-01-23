@@ -14,7 +14,7 @@
         @csrf
         <div class="mb-3">
             <label for="name" class="form-label">نام کاربری</label>
-            <input type="text" class="form-control" name="name" id="name" placeholder="نام کامل خود را وارد کنید" >
+            <input type="text" class="form-control" name="name" id="name" placeholder="نام کاربری خود را وارد کنید" >
             @error('name')
                 <p class="alert alert-danger">{{ $message }}</p>
             @enderror
