@@ -46,15 +46,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <p>
-            طراحی شده با عشق ❤️ |
-            <a href="https://www.linkedin.com/in/amirsalehh" target="_blank">لینکدین</a> |
-            <a href="https://github.com/Amir-Salehh" target="_blank">گیت ‌هاب</a>
-        </p>
-    </footer>
+    @include('layout.footer')
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
