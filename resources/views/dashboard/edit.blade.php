@@ -4,7 +4,6 @@
         exit();
   @endphp
 @endif
-    {{ $id = $_GET['id'] }}
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -14,6 +13,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dashboard/edit.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@latest/dist/css/persian-datepicker.css"/>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://unpkg.com/persian-date@latest/dist/persian-date.js"></script>
+    <script src="https://unpkg.com/persian-datepicker@latest/dist/js/persian-datepicker.js"></script>
 </head>
 <body>
 
@@ -40,21 +43,23 @@
                 <label for="projectDesc" class="form-label">توضیحات پروژه</label>
                 <textarea class="form-control" id="projectDesc" name="description" rows="4" placeholder="توضیحات پروژه را وارد کنید" required>{{ $projects->description }}</textarea>
             </div>
-
+            @php
+                $deadline = $projects->deadline ;
+                @endphp
             <div class="mb-4">
                 <label for="projectDeadline" class="form-label">تاریخ مهلت</label>
-                <input type="date" class="form-control" id="projectDeadline" name="deadline" value="{{ $projects->deadline }}" required>
+                <input type="text" class="form-control" id="projectDeadline" name="projectDeadline" value="{{ $deadline }}" required>
             </div>
 
             <div class="mb-4">
                 <label for="projectStatus" class="form-label">وضعیت پروژه</label>
                 <select class="form-control" id="projectStatus" name="status">
-                    @if(!$projects->status)
-                        <option value="completed" selected>تمام شده</option>
-                        <option value="active" >فعال</option>
+                    @if($projects->status)
+                        <option value="1" selected>تمام شده</option>
+                        <option value="0" >فعال</option>
                     @else
-                        <option value="completed" >تمام شده</option>
-                        <option value="active" selected>فعال</option>
+                        <option value="1" >تمام شده</option>
+                        <option value="0" selected>فعال</option>
                     @endif
                 </select>
             </div>
@@ -75,6 +80,20 @@
     </p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function (deadline) {
+        $("#projectDeadline").persianDatepicker({
+            format: 'YYYY/MM/DD',
+            altFormat: 'YYYY-MM-DD',
+            selectedDate: deadline,
+            calendar: {
+                persian: {
+                    locale: 'en',
+                },
+            },
+
+        });
+    });
+</script>
 </body>
 </html>

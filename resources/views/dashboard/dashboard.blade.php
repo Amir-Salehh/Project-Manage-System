@@ -4,7 +4,7 @@
     exit();
 @endphp
 @endif
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="fa">
 <head>
     <meta charset="UTF-8">
@@ -20,28 +20,37 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ route('dashboard_page') }}">پنل مدیریت پروژه</a>
-    </div>
-    <div class="navbar-nav ms-auto">
-        <a href="{{ route('logout') }}" class="btn btn-danger">خروج</a> <!-- دکمه خروج -->
+        <div class="navbar-nav ms-auto">
+            <a href="{{ route('logout') }}" class="btn btn-danger">خروج</a>
+        </div>
     </div>
 </nav>
-<!-- Main Content -->
+
+<!-- Create Project Section -->
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 class="mb-0">لیست پروژه‌ها</h3>
+        <a href="{{ route('create_project') }}" class="btn btn-success btn-lg shadow-sm">
+            <i class="fas fa-plus"></i> ایجاد پروژه جدید
+        </a>
+    </div>
+    <hr>
+</div>
+
 <div class="container">
-    <h3>لیست پروژه‌ها</h3>
-    <!-- Project Card 1 -->
     @if($projects->isEmpty())
-                <div class="alert alert-warning text-center">
-                    <h4 class="alert-heading">هنوز پروژه ای ایجاد نشده</h4>
-                    <p>لطفا ابتدا یک پروژه جدید ایجاد کنید.</p>
-                </div>
+        <div class="alert alert-warning text-center">
+            <h4 class="alert-heading">هنوز پروژه ای ایجاد نشده</h4>
+            <p>لطفا ابتدا یک پروژه جدید ایجاد کنید.</p>
+        </div>
     @endif
 
+    <!-- Projects List -->
     @foreach($projects as $project)
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header">
                 {{ $project->name }}
             </div>
-
             <div class="card-body">
                 <p>{{ $project->description }}</p>
                 <div class="d-flex gap-2">
@@ -58,14 +67,15 @@
                     <a href="{{ route('project_edit', ['id' => $project->id]) }}" class="btn btn-warning">ویرایش</a>
                 </div>
             </div>
+            @php
+                $deadline = $project->deadline;
+                $deadline = jdate($deadline)->format('Y/m/d');
+            @endphp
             <div class="card-footer">
-                <p>تاریخ تحویل: {{ $project->deadline }}</p>
+                <p>تاریخ تحویل: {{ $deadline }}</p>
             </div>
         </div>
     @endforeach
-    <section class="text-center my-4">
-        <a href="{{ route('create_project') }}" class="btn btn-custom btn-lg">ایجاد پروژه جدید</a>
-    </section>
 </div>
 
 <!-- Footer -->

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Morilog\Jalali\CalendarUtils;
+use Morilog\Jalali\Jalalian;
 
 class dashboardController extends Controller
 {
@@ -20,28 +23,26 @@ class dashboardController extends Controller
         return view('dashboard.projects');
     }
 
-    public function project_post(Request $request)
+    public function project_create_post(Request $request)
     {
         $request->validate([
             'projectName' => 'required',
             'projectDesc' => 'required',
-            'projectDeadline' => 'required|date|after_or_equal:today',
+            'projectDeadline' => 'required',
             'projectStatus' => 'required',
         ]);
-        if ($request->projectStatus == 'فعال') {
-            $status = 1;
-        } else {
-            $status = 0;
-        }
+
+        $status = $request->input('projectStatus');
         $name = $request->input('projectName');
         $desc = $request->input('projectDesc');
-        $deadline = $request->input('projectDeadline');
+        $deadline_jalali = ($request->input('projectDeadline'));
+        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon()->toDateString();
 
         DB::table('projects')->insert([
             'user_id' => session('LoggedUser'),
             'name' => $name,
             'description' => $desc,
-            'deadline' => $deadline,
+            'deadline' => $deadline_miladi,
             'status' => $status,
         ]);
 
@@ -50,7 +51,7 @@ class dashboardController extends Controller
 
     public function project_edit()
     {
-        $projects = Project::where('id', $_GET['id'])->paginate(3);
+        $projects = Project::all()->where('id', $_GET['id'])->first();
         return view('dashboard.edit', compact('projects'));
     }
     public function project_edit_post(Request $request)
@@ -58,23 +59,17 @@ class dashboardController extends Controller
         $request->validate([
             'name' => 'required',
             'description' => 'required',
-            'deadline' => 'required|date|after_or_equal:today',
+            'projectDeadline' => 'required',
             'status' => 'required',
         ]);
         $projects = $request->all();
-
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'deadline' => 'required|date|after_or_equal:today',
-            'status' => 'required',
-        ]);
-        $projects = $request->all();
-
         $project = Project::findOrFail($request->input('id'));
         $project->name = $projects['name'];
         $project->description = $projects['description'];
-        $project->deadline = $projects['deadline'];
+
+        $deadline_jalali = ($request->input('projectDeadline'));
+        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
+        $project->deadline = $deadline_miladi;
         $project->status = $projects['status'];
 
         $project->save();
