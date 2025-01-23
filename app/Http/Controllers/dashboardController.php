@@ -13,7 +13,7 @@ class dashboardController extends Controller
 {
     public function dashboard_page()
     {
-        $projects = Project::all()->where('user_id', session('LoggedUser'));
+        $projects = Project::where('user_id', session('LoggedUser'))->paginate(4);
         return view('dashboard.dashboard', compact('projects'));
     }
 

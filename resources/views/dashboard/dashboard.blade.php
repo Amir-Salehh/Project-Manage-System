@@ -13,6 +13,11 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dashboard/index.css') }}">
+    <style>
+        .card {
+            min-height: 200px;
+        }
+    </style>
 </head>
 <body>
 
@@ -45,38 +50,74 @@
         </div>
     @endif
 
-    <!-- Projects List -->
-    @foreach($projects as $project)
-        <div class="card mb-3">
-            <div class="card-header">
-                {{ $project->name }}
-            </div>
-            <div class="card-body">
-                <p>{{ $project->description }}</p>
-                <div class="d-flex gap-2">
-                    @if(!$project->status)
-                        <a href="{{ route('project_done', ['id' => $project->id]) }}" class="btn btn-danger">در حال انجام</a>
-                    @else
-                        <button class="btn btn-custom">انجام شد</button>
-                    @endif
-                    <form action="{{ route('delete_project', ['id' => $project->id]) }}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">حذف</button>
-                    </form>
-                    <a href="{{ route('project_edit', ['id' => $project->id]) }}" class="btn btn-warning">ویرایش</a>
+    <div class="row">
+        @foreach($projects as $project)
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        {{ $project->name }}
+                    </div>
+                    <div class="card-body">
+                        <p>{{ $project->description }}</p>
+                        <div class="d-flex gap-2">
+                            @if(!$project->status)
+                                <a href="{{ route('project_done', ['id' => $project->id]) }}" class="btn btn-danger">در حال انجام</a>
+                            @else
+                                <button class="btn btn-custom">انجام شد</button>
+                            @endif
+                            <form action="{{ route('delete_project', ['id' => $project->id]) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger">حذف</button>
+                            </form>
+                            <a href="{{ route('project_edit', ['id' => $project->id]) }}" class="btn btn-warning">ویرایش</a>
+                        </div>
+                    </div>
+                    @php
+                        $deadline = $project->deadline;
+                        $deadline = jdate($deadline)->format('Y/m/d');
+                    @endphp
+                    <div class="card-footer">
+                        <p>تاریخ تحویل: {{ $deadline }}</p>
+                    </div>
                 </div>
             </div>
-            @php
-                $deadline = $project->deadline;
-                $deadline = jdate($deadline)->format('Y/m/d');
-            @endphp
-            <div class="card-footer">
-                <p>تاریخ تحویل: {{ $deadline }}</p>
-            </div>
-        </div>
-    @endforeach
+        @endforeach
+    </div>
 </div>
+
+<div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-lg">
+            @if($projects->onFirstPage())
+                <li class="page-item disabled">
+                    <span class="page-link">قبلی</span>
+                </li>
+            @else
+                <li class="page-item">
+                    <a class="page-link" href="{{ $projects->previousPageUrl() }}">قبلی</a>
+                </li>
+            @endif
+
+            @foreach($projects->getUrlRange(1, $projects->lastPage()) as $page => $url)
+                <li class="page-item">
+                    <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                </li>
+            @endforeach
+
+                @if($projects->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $projects->nextPageUrl() }}">بعدی</a>
+                    </li>
+                @else
+                    <li class="page-item disabled">
+                        <span class="page-link">بعدی</span>
+                    </li>
+                @endif
+        </ul>
+    </nav>
+</div>
+
 
 <!-- Footer -->
 <div class="footer">
