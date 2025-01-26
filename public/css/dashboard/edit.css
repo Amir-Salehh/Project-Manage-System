@@ -1,5 +1,12 @@
+@font-face {
+    font-family: 'IRANSans';
+    src: url("../../fonts/IRAN.ttf"),
+    url("../../fonts/IRAN_Bold.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'IRANSans', Arial;
     background-color: #f4f7fc;
     margin: 0;
     padding: 0;

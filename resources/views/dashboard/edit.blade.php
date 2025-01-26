@@ -46,6 +46,13 @@
                         @endif
                     </select>
                 </div>
+
+                <div class="mb-4">
+                    <label for="projectMembers" class="form-label">اعضای گروه</label>
+                    <textarea class="form-control" name="projectMembers" id="projectMembers" rows="3"
+                              placeholder="نام اعضای گروه را وارد کنید. هر نام را با کاما (,) جدا کنید."></textarea>
+                </div>
+
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('dashboard_page') }}" class="btn btn-back"><i class="fas fa-arrow-left"></i> بازگشت به
                         صفحه اصلی</a>

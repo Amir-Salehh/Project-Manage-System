@@ -33,7 +33,7 @@
                 <div class="mb-4">
                     <label for="projectDeadline" class="form-label">تاریخ مهلت</label>
                     <input type="text" class="form-control" name="projectDeadline" id="projectDeadline"
-                           placeholder="لطفا تاریخ مورد نظر را انتخاب کنید" >
+                           placeholder="لطفا تاریخ مورد نظر را انتخاب کنید">
                     @if(session('timePass'))
                         <p class="alert alert-danger">{{ session('timePass') }}</p>
                     @endif
@@ -48,6 +48,12 @@
                     @error('projectStatus')
                     <p class="alert alert-danger">{{ $message }}</p>
                     @enderror
+                </div>
+
+                <div class="mb-4">
+                    <label for="projectMembers" class="form-label">اعضای گروه</label>
+                    <textarea class="form-control" name="projectMembers" id="projectMembers" rows="3"
+                              placeholder="نام اعضای گروه را وارد کنید. هر نام را با کاما (,) جدا کنید."></textarea>
                 </div>
 
                 <div class="d-flex justify-content-between">

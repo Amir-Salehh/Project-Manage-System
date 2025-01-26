@@ -48,11 +48,17 @@
                             </div>
                         </div>
                         @php
-                            $deadline = $project->deadline;
-                            $deadline = jdate($deadline)->format('Y/m/d');
+                            $deadlineMiladi = $project->deadline;
+                            $deadline = jdate($deadlineMiladi)->format('Y/m/d');
+                            $pass = jdate($deadlineMiladi)->isPast();
                         @endphp
-                        <div class="card-footer text-end">
-                            <p>تاریخ تحویل: {{ $deadline }}</p>
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            @if($pass)
+                                <span class="btn btn-outline-danger btn-sm">گذشته</span>
+                            @else
+                                <span class="btn btn-outline-success btn-sm">در زمان مقرر</span>
+                            @endif
+                            <p class="mb-0">تاریخ تحویل: {{ $deadline }}</p>
                         </div>
                     </div>
                 </div>
