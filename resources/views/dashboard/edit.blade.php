@@ -11,6 +11,7 @@
             <h3 class="section-title">ویرایش پروژه</h3>
             <form action="{{ route('project_edit_post', ['id' => $_GET['id']]) }}" method="POST">
                 @csrf
+                @method('PUT')
                 <div class="mb-4">
                     <label for="projectName" class="form-label">نام پروژه</label>
                     <input type="text" class="form-control" name="name" id="projectName"
