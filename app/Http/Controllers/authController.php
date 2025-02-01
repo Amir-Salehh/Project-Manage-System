@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,19 +18,19 @@ class authController extends Controller
             'email' => 'required|email',
             'password' => 'required|min:8'
         ]);
-        $email = $request->input('email');
-        $password = $request->input('password');
 
-        $users = DB::table('users')->get();
-        $user = $users->where('email', $email);
+        $email = $request->input('email');
+        $user = User::where('email', $email)->first();
         if (!$user){
             return redirect('login')->with('php_errormsg', 'ایمیل وجود ندارد');
         }
+
+        $password = $request->input('password');
         $password_configuration = DB::table('users')->select('password')->where('email', $email)->first();
 
         $pass_check = Hash::check($password, $password_configuration->password);
 
-        $id = $user[0]->id;
+        $id = $user['id'];
         if(!$pass_check){
             return redirect('login')->with('php_error_pass', "پسورد شما اشتباه است.");
         }

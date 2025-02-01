@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class dashboardController extends Controller
 {
     public function dashboard_page()
     {
-        $projects = Project::where('user_id', session('LoggedUser'))->paginate(4);
+        $projects = Project::with('teamMembers')->where('user_id', session('LoggedUser'))->paginate(4);
         return view('dashboard.dashboard', compact('projects'));
     }
 
@@ -26,51 +27,71 @@ class dashboardController extends Controller
     public function project_create_post(Request $request)
     {
         $request->validate([
-            'projectName' => 'required',
+            'projectName' => 'required|string|max:255',
             'projectDesc' => 'required',
             'projectDeadline' => 'required',
             'projectStatus' => 'required',
+            'members.*.name' => 'required|string|max:255',
+            'members.*.role' => 'required|string|max:255',
+
         ]);
         $deadline_jalali = ($request->input('projectDeadline'));
         if (!$deadline_jalali > Jalalian::now()) {
             return redirect()->back()->with('timePass', 'تاریخ انتخابی نمیتواند قدیمی باشد.');
         }
-        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
+        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon()->toDateString();
 
         $status = $request->input('projectStatus');
         $name = $request->input('projectName');
         $desc = $request->input('projectDesc');
 
-        DB::table('projects')->insert([
-            'user_id' => session('LoggedUser'),
-            'name' => $name,
-            'description' => $desc,
-            'deadline' => $deadline_miladi,
-            'status' => $status,
-        ]);
+        $project = new Project();
+        $project['user_id'] = session('LoggedUser');
+        $project['name'] = $name;
+        $project['deadline'] = $deadline_miladi;
+        $project['status'] = $status;
+        $project['description'] = $desc;
+        $project->save();
+
+        if (!$request->input('members') == null) {
+            $project_id = $project['id'];
+            foreach ($request->input('members') as $member) {
+                if (!TeamMember::where('name', $member['name'])->exists()) {
+                    $teamMember = new TeamMember();
+                    $teamMember['name'] = $member['name'];
+                    $teamMember->save();
+                }
+                $project = Project::findOrFail($project_id);
+                $member_id = TeamMember::where('name', $member['name'])->select('id')->first()->id;
+                $members = TeamMember::findOrFail($member_id);
+                $project->teamMembers()->attach($members->id, ['role' => $member['role']]);
+            }
+        }
 
         return redirect()->route('dashboard_page');
     }
 
     public function project_edit()
     {
-        $projects = Project::all()->where('id', $_GET['id'])->first();
+        $projects = Project::find($_GET['id']);
         return view('dashboard.edit', compact('projects'));
     }
     public function project_edit_post(Request $request)
     {
         $request->validate([
             'name' => 'required',
+            'members.*.name' => 'required|string|max:255',
+            'members.*.role' => 'required|string|max:255',
             'description' => 'required',
             'status' => 'required',
         ]);
 
-        $deadline_jalali = ($request->input('projectDeadline'));
+        $deadline_jalali = $request->input('projectDeadline');
         if (!$deadline_jalali > Jalalian::now()) {
             return redirect()->back()->with('timePass', 'تاریخ انتخابی نمیتواند قدیمی باشد.');
         }
-        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
 
+        $deadline_miladi = Jalalian::fromFormat('Y/m/d', $deadline_jalali)->toCarbon();
         $projects = $request->all();
         $project = Project::findOrFail($request->input('id'));
         $project->name = $projects['name'];
@@ -82,6 +103,19 @@ class dashboardController extends Controller
 
         $project->save();
 
+        if (!$request->input('members') == null) {
+            $project = Project::find($project['id']);
+            $project->teamMembers()->detach();
+                foreach ($request->input('members') as $memberInput) {
+                    if (!TeamMember::where('name', $memberInput['name'])->exists()) {
+                        $teamMember = new TeamMember();
+                        $teamMember['name'] = $memberInput['name'];
+                        $teamMember->save();
+                    }
+                    $member_id = TeamMember::where('name', $memberInput['name'])->select('id')->first()->id;
+                    $project->teamMembers()->attach($member_id, ['role' => $memberInput['role']]);
+                }
+            }
         return redirect()->route('dashboard_page')->with('update', 'پروژه با موفقیت به روز شد');
 
     }

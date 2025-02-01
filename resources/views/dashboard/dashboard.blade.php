@@ -49,17 +49,48 @@
                         </div>
                         @php
                             $deadlineMiladi = $project->deadline;
-                            $deadline = jdate($deadlineMiladi)->format('Y/m/d');
-                            $pass = jdate($deadlineMiladi)->isPast();
+                            $now = \Carbon\Carbon::now()->format('Y-m-d');
+                            $pass = $deadlineMiladi >= $now;
                         @endphp
                         <div class="card-footer d-flex justify-content-between align-items-center">
                             @if($pass)
-                                <span class="btn btn-outline-danger btn-sm">گذشته</span>
-                            @else
                                 <span class="btn btn-outline-success btn-sm">در زمان مقرر</span>
+                            @else
+                                <span class="btn btn-outline-danger btn-sm">گذشته</span>
                             @endif
-                            <p class="mb-0">تاریخ تحویل: {{ $deadline }}</p>
+                            <p class="mb-0">تاریخ تحویل: {{ jdate($deadlineMiladi)->format('Y/m/d') }}</p>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#teamModal-{{ $project->id }}">
+                                اعضای گروه
+                            </button>
                         </div>
+
+                        <div class="modal fade" id="teamModal-{{ $project->id }}" tabindex="-1" aria-labelledby="teamModalLabel-{{ $project->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="teamModalLabel-{{ $project->id }}">اعضای گروه پروژه: {{ $project->name }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="بستن"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        @if($project->teamMembers->isEmpty())
+                                            <p class="text-center text-muted">هیچ عضوی به این پروژه اختصاص داده نشده است.</p>
+                                        @else
+                                            <ul class="list-group">
+                                                @foreach($project->teamMembers as $member)
+                                                    <li class="list-group-item">
+                                                        <strong>{{ $member->name }} - {{ $member->pivot->role }}</strong>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             @endforeach

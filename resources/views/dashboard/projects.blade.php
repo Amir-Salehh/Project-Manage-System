@@ -52,9 +52,18 @@
 
                 <div class="mb-4">
                     <label for="projectMembers" class="form-label">اعضای گروه</label>
-                    <textarea class="form-control" name="projectMembers" id="projectMembers" rows="3"
-                              placeholder="نام اعضای گروه را وارد کنید. هر نام را با کاما (,) جدا کنید."></textarea>
+                    <div id="membersContainer">
+                        <div class="d-flex gap-2 mb-2">
+                            <input type="text" name="members[0][name]" class="form-control" placeholder="نام عضو" required>
+                            <input type="text" name="members[0][role]" class="form-control" placeholder="مسئولیت عضو" required>
+                            <button type="button" class="btn btn-danger remove-member">حذف</button>
+                        </div>
+                    </div>
+                    <button type="button" id="addMemberBtn" class="btn btn-primary mt-2">افزودن عضو جدید</button>
                 </div>
+
+                <script src="{{ asset('js/teamMembers.js') }}"></script>
+
 
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('dashboard_page') }}" class="btn btn-back"><i class="fas fa-arrow-left"></i> بازگشت به

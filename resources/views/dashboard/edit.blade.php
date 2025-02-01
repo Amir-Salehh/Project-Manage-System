@@ -1,5 +1,5 @@
 @php
-    $title = "ویرایش پروژه"
+    $title = "ویرایش پروژه";
 @endphp
 
 @extends('dashboard.layout.master')
@@ -22,8 +22,9 @@
                     <textarea class="form-control" id="projectDesc" name="description" rows="4"
                               placeholder="توضیحات پروژه را وارد کنید" required>{{ $projects->description }}</textarea>
                 </div>
+
                 @php
-                    $deadline = $projects->deadline ;
+                    $deadline = $projects->deadline;
                 @endphp
                 <div class="mb-4">
                     <label for="projectDeadline" class="form-label">تاریخ مهلت</label>
@@ -48,10 +49,22 @@
                 </div>
 
                 <div class="mb-4">
-                    <label for="projectMembers" class="form-label">اعضای گروه</label>
-                    <textarea class="form-control" name="projectMembers" id="projectMembers" rows="3"
-                              placeholder="نام اعضای گروه را وارد کنید. هر نام را با کاما (,) جدا کنید."></textarea>
+                    <label class="form-label">اعضای گروه و مسئولیت‌ها</label>
+                    <div id="members-container">
+                        @foreach ($projects->teamMembers as $member)
+                            <div class="d-flex gap-2 mb-2 member-row">
+                                <input type="text" name="members[{{ $loop->index }}][name]" class="form-control"
+                                       placeholder="نام عضو" value="{{ $member->name }}" required>
+                                <input type="text" name="members[{{ $loop->index }}][role]" class="form-control"
+                                       placeholder="مسئولیت" value="{{ $member->pivot->role }}" required>
+                                <button type="button" class="btn btn-danger remove-member">حذف</button>
+                            </div>
+                        @endforeach
+                    </div>
+                    <button type="button" id="add-member-btn" class="btn btn-success mt-2">افزودن عضو جدید</button>
                 </div>
+
+                <script src="{{ asset('js/teamMemberEdit.js') }}"></script>
 
                 <div class="d-flex justify-content-between">
                     <a href="{{ route('dashboard_page') }}" class="btn btn-back"><i class="fas fa-arrow-left"></i> بازگشت به
@@ -62,6 +75,5 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/persianDatepicker.js') }}"></script>
-
+    <script src="{{ asset("js/persianDatepicker.js") }}"></script>
 @endsection
