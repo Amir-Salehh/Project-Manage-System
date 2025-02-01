@@ -25,7 +25,7 @@
         @endif
 
         <div class="row">
-            @foreach($projects as $project)
+            @foreach($projects->sortByDesc('created_at') as $project)
                 <div class="col-md-6 mb-4 ">
                     <div class="card h-100">
                         <div class="card-header">
