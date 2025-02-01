@@ -20,7 +20,7 @@ Route::post('/dashboard/create/project/post', [dashboardController::class, 'proj
 
 Route::get('/dashboard/project/edit', [dashboardController::class, 'project_edit'])->name('project_edit');
 Route::get('/dashboard/projects/done', [dashboardController::class, 'project_done'])->name('project_done');
-Route::post('/dashboard/projects/edit/post', [dashboardController::class, 'project_edit_post'])->name('project_edit_post');
+Route::put('/dashboard/projects/edit/post', [dashboardController::class, 'project_edit_post'])->name('project_edit_post');
 Route::delete('/dashboard/projects/delete', [dashboardController::class, 'delete_project'])->name('delete_project');
 
 Route::get('logout', [authController::class, 'logout'])->name('logout');
